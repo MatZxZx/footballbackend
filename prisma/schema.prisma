@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Week {
+  id Int @id @default(autoincrement())
+  state String
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  username String
+  password String
+  team Team @relation(fields: [teamId], references: [id])
+  teamId Int @unique
+  budget Int? @default(100)
+  transfers Int? @default(2)
+  willCard Int? @default(1)
+  willCardActive Boolean? @default(false)
+  valorationsToPlayers UserPlayer[]
+}
+
+model Player {
+  id Int @id @default(autoincrement())
+  name String
+  lastname String
+  photo String?
+  price Int
+  position String
+  goals Int? @default(0)
+  assists Int? @default(0)
+  locks Int? @default(0)
+  present Boolean? @default(false)
+  goalAgainst Int? @default(0)
+  missedPenalty Int? @default(0)
+  interception Int? @default(0)
+  savedPenalty Int? @default(0)
+  criminalCommitted Int? @default(0)
+  emptyGoal Boolean? @default(false)
+  goalsConceded Int? @default(0)
+  align AlignPlayer[]
+  bankings BankingPlayer[]
+  leaderIn Team[]
+  seasons PlayerSeason[]
+  valorations UserPlayer[]
+}
+
+model UserPlayer {
+  user User? @relation(fields: [userId], references: [id])
+  userId Int
+  player Player? @relation(fields: [playerId], references: [id])
+  playerId Int
+  valoration Int
+  @@id([userId, playerId])
+}
+
+model Team {
+  id Int @id @default(autoincrement())
+  teamname String
+  logo String?
+  user User?
+  badPoints Int? @default(0)
+  captain Player? @relation(fields: [captainId], references: [id])
+  captainId Int?
+  align Align @relation(fields: [alignId], references: [id])
+  alignId Int @unique
+  banking Banking @relation(fields: [bankingId], references: [id])
+  bankingId Int @unique
+  seasons TeamSeason[]
+}
+
+model Align {
+  id Int @id @default(autoincrement())
+  team Team?
+  players AlignPlayer[]
+}
+
+model Banking {
+  id Int @id @default(autoincrement())
+  team Team?
+  players BankingPlayer[]
+}
+
+model AlignPlayer {
+  player Player? @relation(fields: [playerId], references: [id])
+  playerId Int
+  align Align? @relation(fields: [alignId], references: [id])
+  alignId Int
+  order Int
+  @@id([playerId, alignId])
+}
+
+model BankingPlayer {
+  player Player? @relation(fields: [playerId], references: [id])
+  playerId Int
+  banking Banking? @relation(fields: [bankingId], references: [id])
+  bankingId Int
+  order Int
+  @@id([playerId, bankingId])
+}
+
+model Season {
+  id Int @id @default(autoincrement())
+  date String
+  teams TeamSeason[]
+  players PlayerSeason[]
+}
+
+model TeamSeason {
+  team Team? @relation(fields: [teamId], references: [id])
+  teamId Int
+  season Season? @relation(fields: [seasonId], references: [id])
+  seasonId Int
+  goals Int
+  assists Int
+  locks Int
+  present Boolean
+  goalAgainst Int
+  missedPenalty Int
+  interception Int
+  savedPenalty Int
+  criminalCommitted Int
+  emptyGoal Boolean
+  goalsConceded Int
+  points Int
+  @@id([teamId, seasonId])
+}
+
+model PlayerSeason {
+  player Player? @relation(fields: [playerId], references: [id])
+  playerId Int
+  season Season? @relation(fields: [seasonId], references: [id])
+  seasonId Int
+  goals Int
+  assists Int
+  locks Int
+  present Boolean
+  goalAgainst Int
+  missedPenalty Int
+  interception Int
+  savedPenalty Int
+  criminalCommitted Int
+  emptyGoal Boolean
+  goalsConceded Int
+  points Int
+  @@id([playerId, seasonId])
+}

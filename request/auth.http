@@ -1,0 +1,25 @@
+POST http://localhost:3000/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "chapengu@gmail.com",
+    "password": "goku123"
+}
+
+POST http://localhost:3000/auth/register HTTP/1.1
+content-type: application/json
+
+{
+    "email": "artec@gmail.com",
+    "username": "artect",
+    "teamname": "python",
+    "password": "vegeta123"
+}
+
+POST http://localhost:3000/auth/logout HTTP/1.1
+content-type: application/json
+
+GET http://localhost:3000/auth/profile HTTP/1.1
+content-type: application/json
+
+DELETE http://localhost:3000/auth/artec HTTP/1.1

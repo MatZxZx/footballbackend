@@ -1,0 +1,31 @@
+GET http://localhost:3000/player HTTP/1.1
+
+GET http://localhost:3000/player/1 HTTP/1.1
+
+POST http://localhost:3000/player HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Nicolas",
+    "lastname": "Rodriguez",
+    "position": "MC",
+    "points": 44,
+    "price": 405
+}
+
+DELETE http://localhost:3000/player/2 HTTP/1.1
+
+POST http://localhost:3000/player/statistics/3 HTTP/1.1
+content-type: application/json
+
+{
+    "assists": 22
+}
+
+POST http://localhost:3000/player/valoration/1 HTTP/1.1
+content-type: application/json
+
+{
+    "userId": 1,
+    "valoration": 1
+}
