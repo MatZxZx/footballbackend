@@ -19,6 +19,4 @@ router.put('/change-align-banking/:id', validateWeek, validateToken, TeamControl
 
 router.put('/change-captain/:id', validateWeek, validateToken, TeamController.putCaptainById) // Cambia de capitan por un jugador que esta en la alineacion del mismo equipo
 
-router.get('/all/:id', validateWeek, validateToken, TeamController.getAll)
-
 module.exports = router
