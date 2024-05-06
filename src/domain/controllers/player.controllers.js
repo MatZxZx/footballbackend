@@ -70,17 +70,17 @@ async function putStatistics(req, res) {
     return res.status(400).json({ message: `El jugador con id: ${playerId} no existe`})
   const updatedStatistics = await PlayerModel.updateStatistics({
     playerId,
-    goals: goals ? player.goals + goals : undefined,
-    assists: assists ? player.assists + assists : undefined,
-    locks: locks ? player.locks + locks : undefined,
+    goals: goals,
+    assists: assists,
+    locks: locks,
     present: present,
-    goalAgainst: goalAgainst ? player.goalAgainst + goalAgainst : undefined,
-    missedPenalty: missedPenalty ? player.missedPenalty + missedPenalty : undefined,
-    interception: interception ? player.interception + interception : undefined,
-    savedPenalty: savedPenalty ? player.savedPenalty + savedPenalty : undefined,
-    criminalCommitted: criminalCommitted ? player.criminalCommitted + criminalCommitted : undefined,
-    emptyGoal: emptyGoal ? emptyGoal : undefined,
-    goalsConceded: goalsConceded ? player.goalsConceded + goalsConceded : undefined
+    goalAgainst: goalAgainst,
+    missedPenalty: missedPenalty,
+    interception: interception,
+    savedPenalty: savedPenalty,
+    criminalCommitted: criminalCommitted,
+    emptyGoal: emptyGoal,
+    goalsConceded: goalsConceded
   })
   return res.json(updatedStatistics)
 }

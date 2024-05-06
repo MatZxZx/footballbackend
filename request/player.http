@@ -15,12 +15,16 @@ content-type: application/json
 
 DELETE http://localhost:3000/player/2 HTTP/1.1
 
-POST http://localhost:3000/player/statistics/3 HTTP/1.1
+###
+
+POST http://localhost:3000/player/statistics/1 HTTP/1.1
 content-type: application/json
 
 {
-    "assists": 22
+    "goals": 0
 }
+
+###
 
 POST http://localhost:3000/player/valoration/1 HTTP/1.1
 content-type: application/json
