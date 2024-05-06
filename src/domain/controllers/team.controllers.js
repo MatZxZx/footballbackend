@@ -6,10 +6,6 @@ function getId(req) {
   return parseInt(req.params.id)
 }
 
-async function getAll(req, res) {
-  const teamId = getId(req)
-}
-
 async function getById(req, res) {
   const teamId = getId(req)
   const team = await TeamModel.findById(teamId)
@@ -202,7 +198,6 @@ async function putCaptainById(req, res) {
 }
 
 module.exports = {
-  getAll,
   getById,
   postPlayerToAlign,
   postPlayerToBanking,

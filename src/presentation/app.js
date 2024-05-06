@@ -13,7 +13,7 @@ const authAdminRoutes = require('./routes/auth.admin.routes')
 
 const app = express()
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT ?? 3000
 
 app.set('PORT', PORT)
 

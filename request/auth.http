@@ -24,7 +24,7 @@ content-type: application/json
 
 DELETE http://localhost:3000/auth/artec HTTP/1.1
 
-POST http://localhost:3000/admin/login HTTP/1.1
+POST http://192.168.0.36:3000/admin/login HTTP/1.1
 content-type: application/json
 
 {
