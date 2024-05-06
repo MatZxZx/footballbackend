@@ -9,7 +9,7 @@ const playerRoutes = require('./routes/player.routes')
 const teamRoutes = require('./routes/team.routes')
 const userRoutes = require('./routes/user.routes')
 const weekRoutes = require('./routes/week.routes')
-
+const authAdminRoutes = require('./routes/auth.admin.routes')
 
 const app = express()
 
@@ -27,6 +27,7 @@ app.use('/player', playerRoutes)
 app.use('/team', teamRoutes)
 app.use('/user', userRoutes)
 app.use('/week', weekRoutes)
+app.use('/admin', authAdminRoutes)
 
 app.use(express.static(path.join(__dirname, '../../public')))
 

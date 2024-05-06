@@ -13,15 +13,16 @@ const PORT = app.get('PORT')
 async function main() {
   // console.log(await PlayerModel.findMany())
   // console.log(await connection.season.findMany())
+  // const userAdimn = await connection.userAdmin.create({
+    // data: {
+      // email: 'chapy@gmail.com',
+      // password: 'lautaro123'
+    // }
+  // })
+  console.log(userAdimn)
 }
 
 // main()
-
-// const z = require('zod')
-
-// const schema = z.string()
-
-// console.log(schema.parse(1))
 
 app.listen(PORT, () => {
   console.log('Serve on port', PORT)

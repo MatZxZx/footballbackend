@@ -1,7 +1,7 @@
 const PlayerModel = require('../../data/models/player.model')
 const playerInterface = require('../interfaces/player.interface')
 
-async function getAll(req, res) { // Obtiene todos los jugadores
+async function getAll(req, res) {
   const players = await PlayerModel.findMany()
   const playersResponse = players.map(p => new playerInterface(p))
   return res.json(playersResponse)
@@ -84,6 +84,11 @@ async function putStatistics(req, res) {
   })
   return res.json(updatedStatistics)
 }
+
+// sube el precio segun los puntos y las transferencias realizadas la semana pasada
+// transferencias ilimitadas hasta que termine su primera semana
+// las transferencias se realizan cuando se compra a un jugador
+
 
 module.exports = {
   getAll,

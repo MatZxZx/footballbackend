@@ -158,3 +158,9 @@ model PlayerSeason {
   points Int
   @@id([playerId, seasonId])
 }
+
+model UserAdmin {
+    id Int @id @default(autoincrement())
+    email String
+    password String
+}
