@@ -33,3 +33,14 @@ content-type: application/json
     "userId": 1,
     "valoration": 1
 }
+
+###
+
+POST https://footballfate.up.railway.app/player/statistics/1 HTTP/1.1
+content-type: application/json
+
+{
+    "goals": 3
+}
+
+###
