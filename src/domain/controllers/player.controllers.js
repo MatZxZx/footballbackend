@@ -4,15 +4,15 @@ const playerInterface = require('../interfaces/player.interface')
 
 async function getAll(req, res) {
   const players = await PlayerModel.findMany()
-  const playersAddStatistcs = players.map(p => {
-    const points = getPlayerPoints(p)
-    return {
-      ...p,
-      points
-    }
-  })
+  // const playersAddStatistcs = players.map(p => {
+  //   const points = getPlayerPoints(p)
+  //   return {
+  //     ...p,
+  //     points
+  //   }
+  // })
 
-  const playersResponse = playersAddStatistcs.map(p => new playerInterface(p))
+  const playersResponse = players.map(p => new playerInterface(p))
   return res.json(playersResponse)
 }
 

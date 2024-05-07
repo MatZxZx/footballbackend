@@ -25,7 +25,7 @@ class playerInterface {
     this.emptyGoal = player.emptyGoal
     this.goalsConceded = player.goalsConceded
     this.valorations = getValorationTotal(player.valorations)
-    this.points = p.points ? p.points : 0
+    // this.points = p.points ? p.points : 0
   }
 }
 
