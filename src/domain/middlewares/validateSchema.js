@@ -1,11 +1,11 @@
 function validateSchema(schema) {
-  return (req, res) => {
+  return (req, res, next) => {
     try {
       schema.parse(req.body)
       next()
     } catch (err) {
-      const errs = err.issues.map(e => e.message)
-      return res.status(400).json(errs)
+      console.log(err)
+      return res.status(400).json({ err })
     }
   }
 }

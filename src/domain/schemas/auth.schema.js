@@ -23,7 +23,7 @@ const registerSchema = z.object({
 const loginSchema = z.object({
   email: z
     .string({
-      required_error: 'El nombre de usuario es requerido'
+      required_error: 'El email es requerido'
     })
     .email({
       message: 'El email es invalido'
