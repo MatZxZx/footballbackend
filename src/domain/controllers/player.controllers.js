@@ -1,17 +1,8 @@
 const PlayerModel = require('../../data/models/player.model')
-const { getPlayerPoints } = require('../helpers/fun')
 const playerInterface = require('../interfaces/player.interface')
 
 async function getAll(req, res) {
   const players = await PlayerModel.findMany()
-  // const playersAddStatistcs = players.map(p => {
-  //   const points = getPlayerPoints(p)
-  //   return {
-  //     ...p,
-  //     points
-  //   }
-  // })
-
   const playersResponse = players.map(p => new playerInterface(p))
   return res.json(playersResponse)
 }
@@ -76,7 +67,7 @@ async function putStatistics(req, res) {
   } = req.body
   const player = await PlayerModel.findById(playerId)
   if (!player)
-    return res.status(400).json({ message: `El jugador con id: ${playerId} no existe`})
+    return res.status(400).json({ message: `El jugador con id: ${playerId} no existe` })
   const updatedStatistics = await PlayerModel.updateStatistics({
     playerId,
     goals: goals,
@@ -94,6 +85,22 @@ async function putStatistics(req, res) {
   return res.json(updatedStatistics)
 }
 
+async function getFourBest(req, res) {
+  const players = await PlayerModel.findMany()
+  const playersWithPoints = players.map(p => new playerInterface(p))
+  playersWithPoints.sort((a, b) => b.points - a.points)
+  const end = playersWithPoints.length > 4 ? 4 : playersWithPoints.length
+  const playersResponse = playersWithPoints.slice(0, end)
+  return res.json(playersResponse)
+}
+
+async function getMoreAndLessBought(req, res) {
+  const players = await PlayerModel.findMany()
+  const playersResponse = players.map(p => new playerInterface(p))
+  playersResponse.sort((a, b) => b.timesBought - a.timesBought)
+  return res.status(200).json([playersResponse[0], playersResponse[playersResponse.length - 1]])
+}
+
 // sube el precio segun los puntos y las transferencias realizadas la semana pasada
 // transferencias ilimitadas hasta que termine su primera semana
 // las transferencias se realizan cuando se compra a un jugador
@@ -102,6 +109,8 @@ async function putStatistics(req, res) {
 module.exports = {
   getAll,
   getById,
+  getFourBest,
+  getMoreAndLessBought,
   postOne,
   deleteById,
   postValoration,

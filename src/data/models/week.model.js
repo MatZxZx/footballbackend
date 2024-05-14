@@ -52,7 +52,7 @@ class WeekModel {
   }
 
   static async createSeason({ date }) {
-    const season = connection.season.create({
+    const season = await connection.season.create({
       data: {
         date
       }
@@ -67,6 +67,7 @@ class WeekModel {
         seasonId,
         playerId: p.id,
         goals: p.goals,
+        position: p.position,
         assists: p.assists,
         locks: p.locks,
         present: p.present,
@@ -75,8 +76,9 @@ class WeekModel {
         interception: p.interception,
         savedPenalty: p.savedPenalty,
         criminalCommitted: p.criminalCommitted,
-        empetyGoal: p.empetyGoal,
+        emptyGoal: p.emptyGoal,
         goalsConceded: p.goalsConceded,
+        timesBought: p.timesBought,
         points: getPlayerPoints(p)
       }
     })
@@ -91,13 +93,14 @@ class WeekModel {
     const teams = await connection.team.findMany({
       include: configIncludeTeam
     })
+
     const teamSeason = getTeamSeason({ seasonId, teams })
 
-    // const res = await connection.teamSeason.createMany({
-    // data: teamsFormat
-    // })
-
+    const res = await connection.teamSeason.createMany({
+      data: teamSeason
+    })
     console.log(teamSeason)
+    return res
   }
 }
 

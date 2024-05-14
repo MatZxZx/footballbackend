@@ -51,6 +51,7 @@ model Player {
   criminalCommitted Int? @default(0)
   emptyGoal Boolean? @default(false)
   goalsConceded Int? @default(0)
+  timesBought Int? @default(0)
   align AlignPlayer[]
   bankings BankingPlayer[]
   leaderIn Team[]
@@ -127,13 +128,11 @@ model TeamSeason {
   goals Int
   assists Int
   locks Int
-  present Boolean
   goalAgainst Int
   missedPenalty Int
   interception Int
   savedPenalty Int
   criminalCommitted Int
-  emptyGoal Boolean
   goalsConceded Int
   points Int
   @@id([teamId, seasonId])
@@ -144,6 +143,7 @@ model PlayerSeason {
   playerId Int
   season Season? @relation(fields: [seasonId], references: [id])
   seasonId Int
+  position String
   goals Int
   assists Int
   locks Int
@@ -155,6 +155,7 @@ model PlayerSeason {
   criminalCommitted Int
   emptyGoal Boolean
   goalsConceded Int
+  timesBought Int
   points Int
   @@id([playerId, seasonId])
 }

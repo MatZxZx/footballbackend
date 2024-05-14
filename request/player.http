@@ -17,11 +17,11 @@ DELETE http://localhost:3000/player/2 HTTP/1.1
 
 ###
 
-POST http://localhost:3000/player/statistics/1 HTTP/1.1
+POST http://localhost:3000/player/statistics/8 HTTP/1.1
 content-type: application/json
 
 {
-    "goals": 0
+    "goals": 20
 }
 
 ###
@@ -31,7 +31,7 @@ content-type: application/json
 
 {
     "userId": 1,
-    "valoration": 1
+    "valoration": 5
 }
 
 ###
@@ -42,5 +42,13 @@ content-type: application/json
 {
     "goals": 3
 }
+
+###
+
+GET http://localhost:3000/player/get/best-players-lastweek HTTP/1.1
+
+###
+
+GET http://localhost:3000/player/get/more-buy-players-lastweek HTTP/1.1
 
 ###

@@ -26,22 +26,41 @@ function putOpenWeek(valueState) {
         const season = await WeekModel.createSeason({ date })
         await WeekModel.createStatisc({ seasonId: season.id })
         await PlayerModel.resetStatisc()
-
         await WeekModel.createTeams({ seasonId: season.id })
         await TeamModel.resetBandPoints()
-
       } catch (e) {
         console.log(e)
         return res.status(500).json({ message: 'Error inesperado' })
       }
     }
-    
+
+    // return res.sendStatus(200)
     const updatedWeek = await WeekModel.updateStateWeek(weekFound.id, valueState)
     return res.json(updatedWeek)
   }
 }
 
+async function putToClose(req, res) {
+  return res.sendStatus(200)
+}
+
+async function putToOpen(req, res) {
+  const weekFound = await WeekModel.findFirst()
+  if (!weekFound)
+    return res.status(400).json({ message: 'La semana no fue creada' })
+  try {
+    await WeekModel.updateStateWeek(weekFound.id, 'open')
+    return res.sendStatus(200)
+  } catch(e) {
+    console.log(e)
+    return res.status(500).json({ message: 'Error de servidor' })
+  }
+
+}
+
 module.exports = {
   postWeek,
-  putOpenWeek
+  putOpenWeek,
+  putToOpen,
+  putToClose
 }

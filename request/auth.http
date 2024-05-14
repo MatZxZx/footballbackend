@@ -10,10 +10,10 @@ POST http://localhost:3000/auth/register HTTP/1.1
 content-type: application/json
 
 {
-    "email": "artec@gmail.com",
-    "username": "artect",
-    "teamname": "python",
-    "password": "vegeta123"
+    "email": "chapengu@gmail.com",
+    "username": "Chapy",
+    "teamname": "PenguCorp",
+    "password": "goku123"
 }
 
 POST http://localhost:3000/auth/logout HTTP/1.1
@@ -31,3 +31,7 @@ content-type: application/json
     "email": "chapy@gmail.com",
     "password": "lautaro123"
 }
+
+POST http://localhost:3000/auth/logout HTTP/1.1
+
+POST http://localhost:3000/auth/verify HTTP/1.1

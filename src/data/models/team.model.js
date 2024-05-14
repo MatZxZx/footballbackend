@@ -1,4 +1,4 @@
-const connection = require('../connection')
+const prisma = require('../connection')
 
 const configInclude = {
   captain: true,
@@ -24,18 +24,8 @@ const configInclude = {
 
 class TeamModel {
 
-  static async findById(id) {
-    const teamFound = await connection.team.findFirst({
-      where: {
-        id
-      },
-      include: configInclude
-    })
-    return teamFound
-  }
-
   static async createAlignPlayer({ alignId, playerId, order }) {
-    await connection.alignPlayer.create({
+    await prisma.alignPlayer.create({
       data: {
         alignId,
         playerId,
@@ -45,7 +35,7 @@ class TeamModel {
   }
 
   static async createBankingPlayer({ bankingId, playerId, order }) {
-    await connection.bankingPlayer.create({
+    await prisma.bankingPlayer.create({
       data: {
         bankingId,
         playerId,
@@ -54,8 +44,17 @@ class TeamModel {
     })
   }
 
+  static async findById(id) {
+    return await prisma.team.findFirst({
+      where: {
+        id
+      },
+      include: configInclude
+    })
+  }
+
   static async findManyAlignPlayer({ alignId }) {
-    const alignsPlayers = await connection.alignPlayer.findMany({
+    return await prisma.alignPlayer.findMany({
       where: {
         alignId
       },
@@ -63,11 +62,10 @@ class TeamModel {
         player: true
       }
     })
-    return alignsPlayers
   }
 
   static async findManyBankingPlayer({ bankingId }) {
-    const bankingPlayers = await connection.bankingPlayer.findMany({
+    return await prisma.bankingPlayer.findMany({
       where: {
         bankingId
       },
@@ -75,11 +73,21 @@ class TeamModel {
         player: true
       }
     })
-    return bankingPlayers
+  }
+
+  static async deleteBankingPlayer({ bankingId, playerId }) {
+    await prisma.bankingPlayer.delete({
+      where: {
+        playerId_bankingId: {
+          bankingId,
+          playerId
+        }
+      }
+    })
   }
 
   static async updateOrderAlignPlayer({ alignId, playerId, order }) {
-    await connection.alignPlayer.update({
+    await prisma.alignPlayer.update({
       where:{
         playerId_alignId: {
           alignId,
@@ -93,7 +101,7 @@ class TeamModel {
   }
 
   static async updateOrderBankingPlayer({ bankingId, playerId, order }) {
-    await connection.bankingPlayer.update({
+    await prisma.bankingPlayer.update({
       where:{
         playerId_bankingId: {
           bankingId,
@@ -107,7 +115,7 @@ class TeamModel {
   }
 
   static async updatePlayerAlignPlayer({ alignId, playerOnAlignId, playerOnBankingId }) {
-    await connection.alignPlayer.update({
+    await prisma.alignPlayer.update({
       where:{
         playerId_alignId: {
           alignId,
@@ -121,7 +129,7 @@ class TeamModel {
   }
 
   static async updatePlayerBankingPlayer({ bankingId, playerOnBankingId, playerOnAlignId }) {
-    await connection.bankingPlayer.update({
+    await prisma.bankingPlayer.update({
       where:{
         playerId_bankingId: {
           bankingId,
@@ -135,7 +143,7 @@ class TeamModel {
   }
 
   static async updateCaptain({ id, captainId }) {
-    const newTeam = await connection.team.update({
+    const newTeam = await prisma.team.update({
       where: {
         id
       },
@@ -148,12 +156,11 @@ class TeamModel {
   }
 
   static async resetBandPoints() {
-    const cols = await connection.team.update({
+    await prisma.team.updateMany({
       data: {
         badPoints: 0
       }
     })
-    return cols
   }  
 }
 

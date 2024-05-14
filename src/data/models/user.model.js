@@ -1,4 +1,4 @@
-const connection = require('../connection')
+const prisma = require('../connection')
 const bcrypt = require('bcryptjs')
 
 const includesConfig = {
@@ -30,23 +30,23 @@ const includesConfig = {
 class UserModel {
 
   static async findMany() {
-    const usersFound = await connection.user.findMany({
+    const usersFound = await prisma.user.findMany({
       include: includesConfig
     })
     return usersFound
   }
 
   static async findManyWithoutIncludes() {
-    const usersFound = await connection.user.findMany()
+    const usersFound = await prisma.user.findMany()
     return usersFound
   }
 
   static async updateManyTransfersForCloseWeek() {
-      await connection.$executeRaw`UPDATE User SET transfers=IF(transfers = 1 or transfers = 2 or transfers = 3, 3, 2)`
+    await prisma.$executeRaw`UPDATE User SET transfers=IF(transfers = 1 or transfers = 2 or transfers = 3, 3, 2)`
   }
 
   static async findById(id) {
-    const userFound = await connection.user.findFirst({
+    const userFound = await prisma.user.findFirst({
       where: {
         id
       },
@@ -56,7 +56,7 @@ class UserModel {
   }
 
   static async findByEmail(email) {
-    const userFound = await connection.user.findFirst({
+    const userFound = await prisma.user.findFirst({
       where: {
         email
       },
@@ -66,7 +66,7 @@ class UserModel {
   }
 
   static async find(email, password) {
-    const userFound = await connection.user.findFirst({
+    const userFound = await prisma.user.findFirst({
       where: {
         email
       },
@@ -81,7 +81,7 @@ class UserModel {
 
   static async create(email, username, password, teamname) {
     const encrypt = await bcrypt.hash(password, 10)
-    const newUser = await connection.user.create({
+    const newUser = await prisma.user.create({
       data: {
         email,
         username,
@@ -95,7 +95,7 @@ class UserModel {
             teamname,
             align: {
               create: {
-                
+
               }
             },
             banking: {
@@ -112,7 +112,7 @@ class UserModel {
   }
 
   static async resetBadPoints({ userId }) {
-    await connection.user.updateMany({
+    await prisma.user.updateMany({
       where: {
         id: userId
       },
@@ -120,6 +120,112 @@ class UserModel {
         badPoints: 0
       }
     })
+  }
+
+  static async updateBudget({ userId, price }) {
+    await prisma.$executeRaw`UPDATE User SET budget = budget - ${price} WHERE id = ${userId}`
+  }
+
+  static async findManyWeeks({ teamId }) {
+    const weeks = await prisma.teamSeason.findMany({
+      where: {
+        teamId: teamId
+      },
+      include: {
+        season: true
+      }
+    })
+    return weeks
+  }
+
+  static async transactionPlayerToAlign({ userId, alignId, playerId, price, state }) {
+    const updateTimesBought = prisma.$executeRaw`UPDATE Player SET timesBought = timesBought + 1 WHERE id = ${playerId}`
+    const updateBudget = prisma.$executeRaw`UPDATE User SET budget = budget - ${price} WHERE id = ${userId}`
+    let mainQuery
+    switch (state.code) {
+      case 0:
+        mainQuery = prisma.alignPlayer.delete({
+          where: {
+            playerId_alignId: {
+              alignId,
+              playerId
+            }
+          }
+        })
+        break
+      case 1:
+        mainQuery = prisma.alignPlayer.update({
+          where: {
+            playerId_alignId: {
+              alignId,
+              playerId: state.playerToUpdate
+            }
+          },
+          data: {
+            playerId
+          }
+        })
+        break
+      case 2:
+        mainQuery = prisma.alignPlayer.create({
+          data: {
+            alignId,
+            playerId,
+            order: state.order
+          }
+        })
+        break
+    }
+    await prisma.$transaction([
+      mainQuery,
+      updateTimesBought,
+      updateBudget
+    ])
+  }
+
+  static async transactionPlayerToBanking({ userId, bankingId, playerId, price, state }) {
+    const updateTimesBought = prisma.$executeRaw`UPDATE Player SET timesBought = timesBought + 1 WHERE id = ${playerId}`
+    const updateBudget = prisma.$executeRaw`UPDATE User SET budget = budget - ${price} WHERE id = ${userId}`
+    let mainQuery
+    switch (state.code) {
+      case 0:
+        mainQuery = prisma.bankingPlayer.delete({
+          where: {
+            playerId_bankingId: {
+              bankingId,
+              playerId
+            }
+          }
+        })
+        break
+      case 1:
+        mainQuery = prisma.bankingPlayer.update({
+          where: {
+            playerId_bankingId: {
+              bankingId,
+              playerId: state.playerToUpdate
+            }
+          },
+          data: {
+            playerId
+          }
+        })
+        break
+      case 2:
+        mainQuery = prisma.bankingPlayer.create({
+          data: {
+            bankingId,
+            playerId,
+            order: state.order
+          }
+        })
+        break
+    }
+    await prisma.$transaction([
+      mainQuery,
+      updateTimesBought,
+      updateBudget
+    ])
   }
 }
 

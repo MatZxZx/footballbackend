@@ -8,5 +8,6 @@ const router = Router()
 router.post('/register', validateSchema(registerSchema), AuthController.register)
 router.post('/login', validateSchema(loginSchema), AuthController.login)
 router.post('/logout', AuthController.logout)
+router.post('/verify', AuthController.verify)
 
 module.exports = router

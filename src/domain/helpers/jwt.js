@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken')
 
+const SECRET = process.env.TOKEN_SECRET
+
 function createAccesToken(payload) {
   return new Promise((res, rej) => {
-    const SECRET = process.env.TOKEN_SECRET
     jwt.sign(
       payload,
       SECRET,
@@ -15,4 +16,14 @@ function createAccesToken(payload) {
   })
 }
 
-module.exports = { createAccesToken }
+function verifyAccesToken(token) {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, SECRET, (err, user) => {
+      if (err)
+        reject(err)
+      resolve(user)
+    })
+  })
+}
+
+module.exports = { createAccesToken, verifyAccesToken }
