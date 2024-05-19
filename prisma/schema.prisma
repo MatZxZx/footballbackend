@@ -52,9 +52,7 @@ model Player {
   emptyGoal Boolean? @default(false)
   goalsConceded Int? @default(0)
   timesBought Int? @default(0)
-  align AlignPlayer[]
-  bankings BankingPlayer[]
-  leaderIn Team[]
+  teams TeamPlayer[]
   seasons PlayerSeason[]
   valorations UserPlayer[]
 }
@@ -74,43 +72,19 @@ model Team {
   logo String?
   user User?
   badPoints Int? @default(0)
-  captain Player? @relation(fields: [captainId], references: [id])
-  captainId Int?
-  align Align @relation(fields: [alignId], references: [id])
-  alignId Int @unique
-  banking Banking @relation(fields: [bankingId], references: [id])
-  bankingId Int @unique
+  players TeamPlayer[]
   seasons TeamSeason[]
 }
 
-model Align {
-  id Int @id @default(autoincrement())
-  team Team?
-  players AlignPlayer[]
-}
-
-model Banking {
-  id Int @id @default(autoincrement())
-  team Team?
-  players BankingPlayer[]
-}
-
-model AlignPlayer {
+model TeamPlayer {
+  team Team? @relation(fields: [teamId], references: [id])
+  teamId Int
   player Player? @relation(fields: [playerId], references: [id])
   playerId Int
-  align Align? @relation(fields: [alignId], references: [id])
-  alignId Int
-  order Int
-  @@id([playerId, alignId])
-}
-
-model BankingPlayer {
-  player Player? @relation(fields: [playerId], references: [id])
-  playerId Int
-  banking Banking? @relation(fields: [bankingId], references: [id])
-  bankingId Int
-  order Int
-  @@id([playerId, bankingId])
+  order Int // 0, 1, 3
+  isCaptain Boolean
+  isBanking Boolean
+  @@id([teamId, playerId])
 }
 
 model Season {
@@ -162,6 +136,6 @@ model PlayerSeason {
 
 model UserAdmin {
     id Int @id @default(autoincrement())
-    email String
+    email String @unique
     password String
 }

@@ -8,7 +8,7 @@ async function login(req, res) {
   if (!userFound)
     return res.status(400).json({ message: 'El usuario no existe' })
   if (!isMatch)
-    return res.json({ message: 'La contrasenia no es valida' })
+    return res.status(400).json({ message: 'La contrasenia no es valida' })
   const user = new UserInterface(userFound)
   const token = await createAccesToken({
     id: user.id
@@ -44,12 +44,12 @@ async function logout(req, res) {
 }
 
 async function verify(req, res) {
-  const token = req.cookies.token
+  const { token } = req.cookies
   if (!token)
     return res.status(401).json({ message: 'No token pa' })
   const { id: userId } = await verifyAccesToken(req.cookies.token)
   const user = await UserModel.findById(userId)
-  if (!user) 
+  if (!user)
     return res.status(400).json({ message: 'El usuario no existe' })
   const userResponse = new UserInterface(user)
   return res.json(userResponse)

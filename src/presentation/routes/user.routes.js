@@ -6,22 +6,17 @@ const { validateUser } = require('../../domain/middlewares/validate.entity')
 
 const router = Router()
 
-router.get('/:id', UserController.getById) // devuelve un usuario por id
+router.use(validateToken)
+router.use(validateWeek)
 
-router.get('/', UserController.getAll) // devuelve todos los usuarios, sin incluir informacion sensible
+router.get('/', UserController.getAll) // devuelve todos los usuarios
 
-router.get('/weeks/:id', validateUser, UserController.getWeeks) // devuelve todos los usuarios, sin incluir informacion sensible
+router.get('/:id', validateUser, UserController.getById) // devuelve un usuario
 
-router.post('/add-player-align/:id', validateWeek, validateToken, validateUser, UserController.postPlayerToAlign) // Agrega un jugador en la alineacion
+router.get('/weeks/:id', validateUser, UserController.getWeeks) // devuelve todas las semanas de un usuario
 
-router.post('/add-player-banking/:id', validateWeek, validateToken, validateUser, UserController.postPlayerToBanking) // Agrega un jugador en la banca 
+router.post('/transfer/:id', validateUser, UserController.postTransfer) // realiza compras (afecta el presupuesto)
 
-router.put('/change-align-align/:id', validateWeek, validateToken, validateUser, UserController.putPlayerAlignToAlign) // Cambia un jugador en la alineacion por otro que este en la misma alineacion
-
-router.put('/change-banking-banking/:id', validateWeek, validateToken, validateUser, UserController.putPlayerBankingToBanking) // Cambia un jugador en la banca por otro que este en la misma banca
-
-router.put('/change-align-banking/:id', validateWeek, validateToken, validateUser, UserController.putPlayerAlignToBanking) // Cambia un jugador en la alineacion por otro que esta en la banca del mismo equipo
-
-router.put('/change-captain/:id', validateWeek, validateToken, validateUser, UserController.putCaptainById) // Cambia de capitan por un jugador que esta en la alineacion del mismo equipo
+router.put('/change/:id', validateUser, UserController.putChange) // cambia el equipo (no afecta el presupuesto)
 
 module.exports = router

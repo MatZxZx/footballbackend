@@ -6,6 +6,9 @@ class UserInterface {
     this.email = user.email
     this.username = user.username
     this.budget = user.budget
+    this.transfers = user.transfers
+    this.willCard = user.willCard
+    this.willCardActive = user.willCardActive
     this.team = new TeamInterface(user.team)
   }
 }

@@ -5,62 +5,49 @@ const TeamModel = require('../../data/models/team.model')
 const { getDateFormSeasonFormat } = require('../helpers/date')
 
 
-async function postWeek(req, res) {
-  const weekFound = await WeekModel.findFirst()
-  if (weekFound)
-    return res.status(400).json({ message: 'La semana ya existe, solo puede existir una semana' })
-  const week = await WeekModel.create()
-  return res.json(week)
-}
+class WeekController {
 
-function putOpenWeek(valueState) {
-  return async (req, res) => {
-    const weekFound = await WeekModel.findFirst()
-    if (!weekFound)
-      return res.status(400).json({ message: 'La semana no esta creada' })
-
-    if (valueState === 'close') {
-      try {
-        await UserModel.updateManyTransfersForCloseWeek()
-        const date = getDateFormSeasonFormat()
-        const season = await WeekModel.createSeason({ date })
-        await WeekModel.createStatisc({ seasonId: season.id })
-        await PlayerModel.resetStatisc()
-        await WeekModel.createTeams({ seasonId: season.id })
-        await TeamModel.resetBandPoints()
-      } catch (e) {
-        console.log(e)
-        return res.status(500).json({ message: 'Error inesperado' })
-      }
+  static async postWeek(req, res) {
+    try {
+      const weekFound = await WeekModel.findFirst()
+      if (weekFound)
+        return res.status(400).json({ message: 'La semana ya existe, solo puede existir una semana' })
+      await WeekModel.create()
+      return res.sendStatus(200)
+    } catch (e) {
+      console.log(e)
+      return res.status(500).json({ message: 'Error de servidor' })
     }
+  }
 
-    // return res.sendStatus(200)
-    const updatedWeek = await WeekModel.updateStateWeek(weekFound.id, valueState)
-    return res.json(updatedWeek)
+  static async putToClose(req, res) {
+    const { week } = req.body
+    try {
+      await UserModel.updateManyTransfersForCloseWeek()
+      const date = getDateFormSeasonFormat()
+      const season = await WeekModel.createSeason({ date })
+      await WeekModel.createStatisc({ seasonId: season.id })
+      await PlayerModel.resetStatistics()
+      await WeekModel.createTeams({ seasonId: season.id })
+      await TeamModel.resetBandPoints()
+      await WeekModel.updateStateWeek(week.id, 'close')
+      return res.sendStatus(200)
+    } catch (e) {
+      console.log(e)
+      return res.status(500).json({ message: 'Error inesperado' })
+    }
+  }
+
+  static async putToOpen(req, res) {
+    const { week } = req.body
+    try {
+      await WeekModel.updateStateWeek(week.id, 'open')
+      return res.sendStatus(200)
+    } catch (e) {
+      console.log(e)
+      return res.status(500).json({ message: 'Error de servidor' })
+    }
   }
 }
 
-async function putToClose(req, res) {
-  return res.sendStatus(200)
-}
-
-async function putToOpen(req, res) {
-  const weekFound = await WeekModel.findFirst()
-  if (!weekFound)
-    return res.status(400).json({ message: 'La semana no fue creada' })
-  try {
-    await WeekModel.updateStateWeek(weekFound.id, 'open')
-    return res.sendStatus(200)
-  } catch(e) {
-    console.log(e)
-    return res.status(500).json({ message: 'Error de servidor' })
-  }
-
-}
-
-module.exports = {
-  postWeek,
-  putOpenWeek,
-  putToOpen,
-  putToClose
-}
+module.exports = WeekController

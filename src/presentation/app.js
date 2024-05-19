@@ -5,11 +5,10 @@ const cookieParser = require('cookie-parser')
 const path = require('path')
 
 const authRoutes = require('./routes/auth.routes')
+const authAdminRoutes = require('./routes/auth.admin.routes')
 const playerRoutes = require('./routes/player.routes')
-const teamRoutes = require('./routes/team.routes')
 const userRoutes = require('./routes/user.routes')
 const weekRoutes = require('./routes/week.routes')
-const authAdminRoutes = require('./routes/auth.admin.routes')
 
 const app = express()
 
@@ -26,11 +25,10 @@ app.use(cors({
 }))
 
 app.use('/auth', authRoutes)
+app.use('/admin', authAdminRoutes)
 app.use('/player', playerRoutes)
-app.use('/team', teamRoutes)
 app.use('/user', userRoutes)
 app.use('/week', weekRoutes)
-app.use('/admin', authAdminRoutes)
 
 app.use(express.static(path.join(__dirname, '../../public')))
 

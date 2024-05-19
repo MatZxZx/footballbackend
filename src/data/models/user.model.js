@@ -4,23 +4,9 @@ const bcrypt = require('bcryptjs')
 const includesConfig = {
   team: {
     include: {
-      captain: true,
-      align: {
+      players: {
         include: {
-          players: {
-            include: {
-              player: true
-            }
-          }
-        }
-      },
-      banking: {
-        include: {
-          players: {
-            include: {
-              player: true
-            }
-          }
+          player: true
         }
       }
     }
@@ -30,15 +16,13 @@ const includesConfig = {
 class UserModel {
 
   static async findMany() {
-    const usersFound = await prisma.user.findMany({
+    return await prisma.user.findMany({
       include: includesConfig
     })
-    return usersFound
   }
 
   static async findManyWithoutIncludes() {
-    const usersFound = await prisma.user.findMany()
-    return usersFound
+    return await prisma.user.findMany()
   }
 
   static async updateManyTransfersForCloseWeek() {
@@ -46,23 +30,21 @@ class UserModel {
   }
 
   static async findById(id) {
-    const userFound = await prisma.user.findFirst({
+    return await prisma.user.findFirst({
       where: {
         id
       },
       include: includesConfig
     })
-    return userFound
   }
 
   static async findByEmail(email) {
-    const userFound = await prisma.user.findFirst({
+    return await prisma.user.findFirst({
       where: {
         email
       },
       include: includesConfig
     })
-    return userFound
   }
 
   static async find(email, password) {
@@ -81,7 +63,7 @@ class UserModel {
 
   static async create(email, username, password, teamname) {
     const encrypt = await bcrypt.hash(password, 10)
-    const newUser = await prisma.user.create({
+    return await prisma.user.create({
       data: {
         email,
         username,
@@ -92,33 +74,11 @@ class UserModel {
         willCardActive: false,
         team: {
           create: {
-            teamname,
-            align: {
-              create: {
-
-              }
-            },
-            banking: {
-              create: {
-
-              }
-            }
+            teamname
           }
         }
       },
       include: includesConfig
-    })
-    return newUser
-  }
-
-  static async resetBadPoints({ userId }) {
-    await prisma.user.updateMany({
-      where: {
-        id: userId
-      },
-      data: {
-        badPoints: 0
-      }
     })
   }
 
@@ -127,7 +87,7 @@ class UserModel {
   }
 
   static async findManyWeeks({ teamId }) {
-    const weeks = await prisma.teamSeason.findMany({
+    return await prisma.teamSeason.findMany({
       where: {
         teamId: teamId
       },
@@ -135,97 +95,30 @@ class UserModel {
         season: true
       }
     })
-    return weeks
   }
 
-  static async transactionPlayerToAlign({ userId, alignId, playerId, price, state }) {
-    const updateTimesBought = prisma.$executeRaw`UPDATE Player SET timesBought = timesBought + 1 WHERE id = ${playerId}`
-    const updateBudget = prisma.$executeRaw`UPDATE User SET budget = budget - ${price} WHERE id = ${userId}`
-    let mainQuery
-    switch (state.code) {
-      case 0:
-        mainQuery = prisma.alignPlayer.delete({
-          where: {
-            playerId_alignId: {
-              alignId,
-              playerId
-            }
-          }
-        })
-        break
-      case 1:
-        mainQuery = prisma.alignPlayer.update({
-          where: {
-            playerId_alignId: {
-              alignId,
-              playerId: state.playerToUpdate
-            }
-          },
-          data: {
-            playerId
-          }
-        })
-        break
-      case 2:
-        mainQuery = prisma.alignPlayer.create({
-          data: {
-            alignId,
-            playerId,
-            order: state.order
-          }
-        })
-        break
-    }
-    await prisma.$transaction([
-      mainQuery,
-      updateTimesBought,
-      updateBudget
-    ])
+  static async createValoration({ userId, playerId, valoration }) {
+    await connection.userPlayer.create({
+      data: {
+        userId,
+        playerId,
+        valoration
+      }
+    })
   }
 
-  static async transactionPlayerToBanking({ userId, bankingId, playerId, price, state }) {
-    const updateTimesBought = prisma.$executeRaw`UPDATE Player SET timesBought = timesBought + 1 WHERE id = ${playerId}`
-    const updateBudget = prisma.$executeRaw`UPDATE User SET budget = budget - ${price} WHERE id = ${userId}`
-    let mainQuery
-    switch (state.code) {
-      case 0:
-        mainQuery = prisma.bankingPlayer.delete({
-          where: {
-            playerId_bankingId: {
-              bankingId,
-              playerId
-            }
-          }
-        })
-        break
-      case 1:
-        mainQuery = prisma.bankingPlayer.update({
-          where: {
-            playerId_bankingId: {
-              bankingId,
-              playerId: state.playerToUpdate
-            }
-          },
-          data: {
-            playerId
-          }
-        })
-        break
-      case 2:
-        mainQuery = prisma.bankingPlayer.create({
-          data: {
-            bankingId,
-            playerId,
-            order: state.order
-          }
-        })
-        break
-    }
-    await prisma.$transaction([
-      mainQuery,
-      updateTimesBought,
-      updateBudget
-    ])
+  static async updateValoration({ userId, playerId, valoration }) {
+    return await connection.userPlayer.update({
+      where: {
+        userId_playerId: {
+          userId,
+          playerId
+        }
+      },
+      data: {
+        valoration
+      }
+    })
   }
 }
 

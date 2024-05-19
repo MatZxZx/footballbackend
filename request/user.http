@@ -2,59 +2,141 @@ GET http://localhost:3000/user HTTP/1.1
 
 GET http://localhost:3000/user/1 HTTP/1.1
 
-###
-
-POST http://localhost:3000/user/add-player-align/1 HTTP/1.1
-Content-Type: application/json
-
-{
-    "playerId": 8
-}
-
-###
-
-POST http://localhost:3000/user/add-player-banking/1 HTTP/1.1
-Content-Type: application/json
-
-{
-    "playerId": 10
-}
-
-###
-
-PUT http://localhost:3000/user/change-align-align/1 HTTP/1.1
-Content-Type: application/json
-
-{
-    "playerAId": 1,
-    "playerBId": 2
-}
-
-PUT http://localhost:3000/user/change-banking-banking/1 HTTP/1.1
-Content-Type: application/json
-
-{
-    "playerAId": 11,
-    "playerBId": 12
-}
-
-PUT http://localhost:3000/user/change-align-banking/1 HTTP/1.1
-Content-Type: application/json
-
-{
-    "playerOnAlignId": 13,
-    "playerOnBankingId": 11
-}
-
-PUT http://localhost:3000/user/change-captain/1 HTTP/1.1
-Content-Type: application/json
-
-{
-    "playerId": 8
-}
-
-###
-
 GET http://localhost:3000/user/weeks/1 HTTP/1.1
 
 ###
+
+POST http://localhost:3000/user/transfer/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "players": [
+        {
+            "id": 11,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": true,
+        },
+        {
+            "id": 2,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 3,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 4,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 5,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 6,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 7,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 8,
+            "isBanking": true,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 9,
+            "isBanking": true,
+            "order": 0,
+            "isCaptain": false
+        }
+    ]
+}
+
+###
+
+PUT http://localhost:3000/user/change/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "players": [
+        {
+            "id": 1,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": true
+        },
+        {
+            "id": 2,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 3,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 4,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 5,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 6,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 7,
+            "isBanking": false,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 8,
+            "isBanking": true,
+            "order": 0,
+            "isCaptain": false
+        },
+        {
+            "id": 9,
+            "isBanking": true,
+            "order": 0,
+            "isCaptain": false
+        }
+    ]
+}
+
+###
+
+PATCH http://localhost:3000/user/captain/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "playerId": 8
+}

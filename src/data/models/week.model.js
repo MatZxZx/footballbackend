@@ -2,25 +2,7 @@ const connection = require('../connection')
 const { getTeamSeason, getPlayerPoints } = require('../../domain/helpers/fun')
 
 const configIncludeTeam = {
-  captain: true,
-  align: {
-    include: {
-      players: {
-        include: {
-          player: true
-        }
-      }
-    }
-  },
-  banking: {
-    include: {
-      players: {
-        include: {
-          player: true
-        }
-      }
-    }
-  }
+
 }
 
 class WeekModel {
@@ -91,11 +73,15 @@ class WeekModel {
   // Por hacer -> nashe
   static async createTeams({ seasonId }) {
     const teams = await connection.team.findMany({
-      include: configIncludeTeam
+      include: {
+        players: {
+          include: {
+            player: true
+          }
+        }
+      }
     })
-
     const teamSeason = getTeamSeason({ seasonId, teams })
-
     const res = await connection.teamSeason.createMany({
       data: teamSeason
     })

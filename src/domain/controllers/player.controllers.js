@@ -47,7 +47,7 @@ async function postValoration(req, res) {
   } else {
     valorationResponse = await PlayerModel.createValoration({ userId, playerId, valoration })
   }
-  return res.json(valoration)
+  return res.sendStatus(200)
 }
 
 async function putStatistics(req, res) {
@@ -68,8 +68,8 @@ async function putStatistics(req, res) {
   const player = await PlayerModel.findById(playerId)
   if (!player)
     return res.status(400).json({ message: `El jugador con id: ${playerId} no existe` })
-  const updatedStatistics = await PlayerModel.updateStatistics({
-    playerId,
+  await PlayerModel.updateStatistics({
+    id: playerId,
     goals: goals,
     assists: assists,
     locks: locks,
@@ -82,7 +82,7 @@ async function putStatistics(req, res) {
     emptyGoal: emptyGoal,
     goalsConceded: goalsConceded
   })
-  return res.json(updatedStatistics)
+  return res.sendStatus(200)
 }
 
 async function getFourBest(req, res) {

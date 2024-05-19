@@ -2,22 +2,23 @@ const connection = require('../connection')
 
 class PlayerModel {
 
-  static async create(name, lastname, position, price) {
-    const newPlayer = await connection.player.create({
+  static async create({ name, lastname, position, price }) {
+    return await connection.player.create({
       data: {
         name,
         lastname,
         position,
-        price,
-        goals: 0,
-        assists: 0,
-        locks: 0
-      },
+        price
+      }
+    })
+  }
+
+  static async findMany() {
+    return await connection.player.findMany({
       include: {
         valorations: true
       }
     })
-    return newPlayer
   }
 
   static async findById(id) {
@@ -32,55 +33,10 @@ class PlayerModel {
     return playerFound
   }
 
-  static async findMany() {
-    const playersFound = await connection.player.findMany({
-      include: {
-        valorations: true
-      }
-    })
-    return playersFound
-  }
-
-  static async findValoration({ userId, playerId }) {
-    const valoration = await connection.userPlayer.findFirst({
+  static async updateStatistics({ id, goals, assists, locks, present, goalAgainst, missedPenalty, interception, savedPenalty, criminalCommitted, emptyGoal, goalsConceded }) {
+    await connection.player.update({
       where: {
-        userId,
-        playerId,
-      }
-    })
-    return valoration
-  }
-
-  static async createValoration({ userId, playerId, valoration }) {
-    const newValoration = await connection.userPlayer.create({
-      data: {
-        userId,
-        playerId,
-        valoration
-      }
-    })
-    return newValoration
-  }
-
-  static async updateValoration({ userId, playerId, valoration }) {
-    const updatedValoration = await connection.userPlayer.update({
-      where: {
-        userId_playerId: {
-          userId,
-          playerId
-        }
-      },
-      data: {
-        valoration
-      }
-    })
-    return updatedValoration
-  }
-
-  static async updateStatistics({ playerId, goals, assists, locks, present, goalAgainst, missedPenalty, interception, savedPenalty, criminalCommitted, emptyGoal, goalsConceded }) {
-    const updatedValoration = await connection.player.update({
-      where: {
-        id: playerId
+        id
       },
       data: {
         goals,
@@ -96,10 +52,9 @@ class PlayerModel {
         goalsConceded
       }
     })
-    return updatedValoration
   }
 
-  static async resetStatisc() {
+  static async resetStatistics() {
     await connection.player.updateMany({
       data: {
         goals: 0,
@@ -117,13 +72,15 @@ class PlayerModel {
     })
   }
 
-  static async findManyStatisc({ playerId }) {
-    const statistics = await connection.playerSeason.findMany({
+  static async updateTimesBought({ id }) {
+    await connection.player.update({
       where: {
-        playerId
+        id
+      },
+      data: {
+        timesBought
       }
     })
-    return statistics
   }
 
   static async findFourBestPlayersLastWeek() {
@@ -148,17 +105,6 @@ class PlayerModel {
       players.push(playersLastseason[i])
     }
     return players
-  }
-
-  static async updateTimesBought({ id, timesBought }) {
-    await connection.player.update({
-      where: {
-        id
-      },
-      data: {
-        timesBought
-      }
-    })
   }
 
   static async findManyOfLastweek() {
