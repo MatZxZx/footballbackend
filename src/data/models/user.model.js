@@ -1,4 +1,4 @@
-const prisma = require('../connection')
+const prisma = require('../prisma')
 const bcrypt = require('bcryptjs')
 
 const includesConfig = {
@@ -6,9 +6,31 @@ const includesConfig = {
     include: {
       players: {
         include: {
-          player: true
+          player: {
+            include: {
+              valorations: true
+            }
+          }
         }
       }
+    }
+  }
+}
+
+// Adaptador de model a controller
+function userToUserController(user) {
+  if (!user)
+    return user
+  return {
+    ...user,
+    team: {
+      ...user.team,
+      players: user.team.players.map(p => ({
+        ...p.player,
+        isBanking: p.isBanking,
+        order: p.order,
+        isCaptain: p.isCaptain
+      }))
     }
   }
 }
@@ -16,9 +38,9 @@ const includesConfig = {
 class UserModel {
 
   static async findMany() {
-    return await prisma.user.findMany({
+    return (await prisma.user.findMany({
       include: includesConfig
-    })
+    })).map(u => userToUserController(u))
   }
 
   static async findManyWithoutIncludes() {
@@ -30,30 +52,30 @@ class UserModel {
   }
 
   static async findById(id) {
-    return await prisma.user.findFirst({
+    return userToUserController(await prisma.user.findFirst({
       where: {
         id
       },
       include: includesConfig
-    })
+    }))
   }
 
   static async findByEmail(email) {
-    return await prisma.user.findFirst({
+    return userToUserController(await prisma.user.findFirst({
       where: {
         email
       },
       include: includesConfig
-    })
+    }))
   }
 
   static async find(email, password) {
-    const userFound = await prisma.user.findFirst({
+    const userFound = userToUserController(await prisma.user.findFirst({
       where: {
         email
       },
       include: includesConfig
-    })
+    }))
     if (userFound) {
       const isMatch = await bcrypt.compare(password, userFound.password)
       return { userFound, isMatch }
@@ -63,7 +85,7 @@ class UserModel {
 
   static async create(email, username, password, teamname) {
     const encrypt = await bcrypt.hash(password, 10)
-    return await prisma.user.create({
+    return userToUserController(await prisma.user.create({
       data: {
         email,
         username,
@@ -79,11 +101,20 @@ class UserModel {
         }
       },
       include: includesConfig
-    })
+    }))
   }
 
-  static async updateBudget({ userId, price }) {
-    await prisma.$executeRaw`UPDATE User SET budget = budget - ${price} WHERE id = ${userId}`
+  static async update({ id, budget, transfers, unlimitedTransfers }) {
+    await prisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        budget,
+        transfers,
+        unlimitedTransfers
+      }
+    })
   }
 
   static async findManyWeeks({ teamId }) {
@@ -108,7 +139,7 @@ class UserModel {
   }
 
   static async updateValoration({ userId, playerId, valoration }) {
-    return await connection.userPlayer.update({
+    await connection.userPlayer.update({
       where: {
         userId_playerId: {
           userId,

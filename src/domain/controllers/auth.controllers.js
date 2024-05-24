@@ -1,6 +1,6 @@
 const UserModel = require('../../data/models/user.model')
 const UserInterface = require('../interfaces/user.interface')
-const { createAccesToken, verifyAccesToken } = require('../helpers/jwt')
+const { createAccesToken, verifyAccesToken } = require('../libs/jwt')
 
 async function login(req, res) {
   const { email, password } = req.body

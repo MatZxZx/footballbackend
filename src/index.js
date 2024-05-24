@@ -1,5 +1,5 @@
 const app = require('./presentation/app')
-const prisma = require('./data/connection')
+const prisma = require('./data/prisma')
 const players = require('./data/provider/players')
 
 const PORT = app.get('PORT')
@@ -7,7 +7,7 @@ const PORT = app.get('PORT')
 async function main() {
   try {
     // const res = await prisma.player.createMany({
-    //   data: players
+      // data: players
     // })
     // console.log(res)
     // const res = await prisma.userAdmin.create({

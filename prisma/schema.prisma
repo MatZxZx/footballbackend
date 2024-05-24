@@ -30,6 +30,7 @@ model User {
   transfers Int? @default(2)
   willCard Int? @default(1)
   willCardActive Boolean? @default(false)
+  unlimitedTransfers Boolean? @default(true)
   valorationsToPlayers UserPlayer[]
 }
 
@@ -38,8 +39,8 @@ model Player {
   name String
   lastname String
   photo String?
-  price Int
   position String
+  price Int? @default(5)
   goals Int? @default(0)
   assists Int? @default(0)
   locks Int? @default(0)
@@ -117,7 +118,6 @@ model PlayerSeason {
   playerId Int
   season Season? @relation(fields: [seasonId], references: [id])
   seasonId Int
-  position String
   goals Int
   assists Int
   locks Int
@@ -130,12 +130,5 @@ model PlayerSeason {
   emptyGoal Boolean
   goalsConceded Int
   timesBought Int
-  points Int
   @@id([playerId, seasonId])
-}
-
-model UserAdmin {
-    id Int @id @default(autoincrement())
-    email String @unique
-    password String
 }

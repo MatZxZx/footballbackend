@@ -1,12 +1,14 @@
 const { Router } = require('express')
 const AuthController = require('../../domain/controllers/auth.controllers')
-const validateSchema = require('../../domain/middlewares/validateSchema')
-const { registerSchema, loginSchema } = require('../../domain/schemas/auth.schema')
+const ValidatorWeek = require('../../domain/middlewares/validator.week')
 
 const router = Router()
 
-router.post('/register', validateSchema(registerSchema), AuthController.register)
-router.post('/login', validateSchema(loginSchema), AuthController.login)
+router.use(ValidatorWeek.validateWeek)
+router.use(ValidatorWeek.validateOpen)
+
+router.post('/register', AuthController.register)
+router.post('/login', AuthController.login)
 router.post('/logout', AuthController.logout)
 router.post('/verify', AuthController.verify)
 

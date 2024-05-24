@@ -1,4 +1,4 @@
-const prisma = require('../connection')
+const prisma = require('../prisma')
 
 const configInclude = {
   players: {
@@ -7,6 +7,18 @@ const configInclude = {
 }
 
 class TeamModel {
+
+  static async findMany() {
+    return await prisma.team.findMany({
+      include: {
+        players: {
+          include: {
+            player: true
+          }
+        }
+      }
+    })
+  }
 
   static async resetBandPoints() {
     await prisma.team.updateMany({

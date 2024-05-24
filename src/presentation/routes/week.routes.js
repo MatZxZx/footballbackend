@@ -1,5 +1,5 @@
 const WeekController = require('../../domain/controllers/week.controllers')
-const ValidatorWeek = require('../../domain/middlewares/validateWeek')
+const ValidatorWeek = require('../../domain/middlewares/validator.week')
 const { Router } = require('express')
 
 const router = Router()

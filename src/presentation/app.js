@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser')
 const path = require('path')
 
 const authRoutes = require('./routes/auth.routes')
-const authAdminRoutes = require('./routes/auth.admin.routes')
 const playerRoutes = require('./routes/player.routes')
 const userRoutes = require('./routes/user.routes')
 const weekRoutes = require('./routes/week.routes')
@@ -17,6 +16,7 @@ const PORT = process.env.PORT ?? 3000
 app.set('PORT', PORT)
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(cors({
@@ -25,7 +25,6 @@ app.use(cors({
 }))
 
 app.use('/auth', authRoutes)
-app.use('/admin', authAdminRoutes)
 app.use('/player', playerRoutes)
 app.use('/user', userRoutes)
 app.use('/week', weekRoutes)

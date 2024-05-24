@@ -1,9 +1,9 @@
-const connection = require('../connection')
+const prisma = require('../prisma')
 
 class PlayerModel {
 
   static async create({ name, lastname, position, price }) {
-    return await connection.player.create({
+    return await prisma.player.create({
       data: {
         name,
         lastname,
@@ -14,7 +14,7 @@ class PlayerModel {
   }
 
   static async findMany() {
-    return await connection.player.findMany({
+    return await prisma.player.findMany({
       include: {
         valorations: true
       }
@@ -22,7 +22,7 @@ class PlayerModel {
   }
 
   static async findById(id) {
-    const playerFound = await connection.player.findFirst({
+    const playerFound = await prisma.player.findFirst({
       where: {
         id
       },
@@ -34,7 +34,7 @@ class PlayerModel {
   }
 
   static async updateStatistics({ id, goals, assists, locks, present, goalAgainst, missedPenalty, interception, savedPenalty, criminalCommitted, emptyGoal, goalsConceded }) {
-    await connection.player.update({
+    await prisma.player.update({
       where: {
         id
       },
@@ -55,7 +55,7 @@ class PlayerModel {
   }
 
   static async resetStatistics() {
-    await connection.player.updateMany({
+    await prisma.player.updateMany({
       data: {
         goals: 0,
         assists: 0,
@@ -67,13 +67,14 @@ class PlayerModel {
         savedPenalty: 0,
         criminalCommitted: 0,
         emptyGoal: false,
-        goalsConceded: 0
+        goalsConceded: 0,
+        timesBought: 0
       }
     })
   }
 
   static async updateTimesBought({ id }) {
-    await connection.player.update({
+    await prisma.player.update({
       where: {
         id
       },
@@ -84,11 +85,11 @@ class PlayerModel {
   }
 
   static async findFourBestPlayersLastWeek() {
-    const seasons = await connection.season.findMany()
+    const seasons = await prisma.season.findMany()
     if (!seasons.length)
       return []
     const lastSeason = seasons[seasons.length - 1]
-    const playersLastseason = await connection.playerSeason.findMany({
+    const playersLastseason = await prisma.playerSeason.findMany({
       where: {
         seasonId: lastSeason.id
       },
@@ -108,11 +109,11 @@ class PlayerModel {
   }
 
   static async findManyOfLastweek() {
-    const seasons = await connection.season.findMany()
+    const seasons = await prisma.season.findMany()
     if (!seasons.length) {
       return []
     }
-    const players = await connection.playerSeason.findMany({
+    const players = await prisma.playerSeason.findMany({
       where: {
         seasonId: seasons[seasons.length - 1].id
       },
@@ -125,6 +126,39 @@ class PlayerModel {
       }
     })
     return players.map(p => ({ ...p, player: { ...p.player, valorations: p.player.valorations.reduce((acum, v) => acum + v.valoration, 0) / p.player.valorations.length } }))
+  }
+
+  static async findValoration({ userId, playerId }) {
+    return await prisma.userPlayer.findFirst({
+      where: {
+        playerId,
+        userId
+      }
+    })
+  }
+
+  static async createValoration({ userId, playerId, valoration }) {
+    return await prisma.userPlayer.create({
+      data: {
+        userId,
+        playerId,
+        valoration
+      }
+    })
+  }
+
+  static async updateValoration({ userId, playerId, valoration }) {
+    return await prisma.userPlayer.update({
+      where: {
+        userId_playerId: {
+          userId,
+          playerId
+        }
+      },
+      data: {
+        valoration
+      }
+    })
   }
 }
 

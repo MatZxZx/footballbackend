@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Player` MODIFY `price` INTEGER NULL DEFAULT 5;

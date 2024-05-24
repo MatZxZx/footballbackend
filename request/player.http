@@ -2,9 +2,9 @@ GET http://localhost:3000/player HTTP/1.1
 
 GET http://localhost:3000/player/1 HTTP/1.1
 
-GET http://localhost:3000/player/best-players-lastweek HTTP/1.1
+GET http://localhost:3000/player/lastweek HTTP/1.1
 
-GET http://localhost:3000/player/more-buy-players-lastweek HTTP/1.1
+GET http://localhost:3000/player/lastweek/1 HTTP/1.1
 
 POST http://localhost:3000/player HTTP/1.1
 content-type: application/json
@@ -12,9 +12,7 @@ content-type: application/json
 {
     "name": "Nicolas",
     "lastname": "Rodriguez",
-    "position": "MC",
-    "points": 44,
-    "price": 8
+    "photo": null
 }
 
 POST http://localhost:3000/player/valoration/1 HTTP/1.1
