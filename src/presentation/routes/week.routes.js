@@ -4,7 +4,9 @@ const { Router } = require('express')
 
 const router = Router()
 
-router.post('/', WeekController.postWeek)
+router.get('/', WeekController.get)
+
+router.post('/', WeekController.post)
 
 router.put('/open', ValidatorWeek.validateWeek, ValidatorWeek.validateClose, WeekController.putToOpen)
 

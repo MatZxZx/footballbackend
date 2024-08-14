@@ -1,3 +1,4 @@
+const { getPlayerPoints } = require('../../domain/helpers/player.helpers')
 const prisma = require('../prisma')
 
 class PlayerModel {
@@ -159,6 +160,23 @@ class PlayerModel {
         valoration
       }
     })
+  }
+
+  static async updateManyPrice() {
+    const players = await this.findMany()
+    // console.log(players.map(p => getPlayerPoints(p) <= 6 ? 5 : Math.floor(getPlayerPoints(p) / 4)))
+    console.log('Actualizando')
+    await prisma.$transaction(players.map(p => {
+      return prisma.player.update({
+        data: {
+          price: getPlayerPoints(p) <= 6 ? 5 : Math.floor(getPlayerPoints(p) / 4)
+        },
+        where: {
+          id: p.id
+        }
+      })
+    }))
+    console.log('Actualizacion completa')
   }
 }
 

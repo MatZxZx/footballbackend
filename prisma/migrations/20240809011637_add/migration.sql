@@ -2,6 +2,8 @@
 CREATE TABLE `Week` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `state` VARCHAR(191) NOT NULL,
+    `end` VARCHAR(191) NOT NULL DEFAULT 'lunes 12:00',
+    `start` VARCHAR(191) NOT NULL DEFAULT 'miercoles 12:00',
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -9,15 +11,14 @@ CREATE TABLE `Week` (
 -- CreateTable
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `teamId` INTEGER NOT NULL,
     `budget` INTEGER NULL DEFAULT 100,
     `transfers` INTEGER NULL DEFAULT 2,
-    `willCard` INTEGER NULL DEFAULT 1,
-    `willCardActive` BOOLEAN NULL DEFAULT false,
-    `unlimitedTransfers` BOOLEAN NULL DEFAULT true,
+    `willCardActive` BOOLEAN NULL DEFAULT true,
+    `willCards` INTEGER NULL DEFAULT 2,
 
     UNIQUE INDEX `User_email_key`(`email`),
     UNIQUE INDEX `User_teamId_key`(`teamId`),
@@ -54,6 +55,7 @@ CREATE TABLE `UserPlayer` (
     `playerId` INTEGER NOT NULL,
     `valoration` INTEGER NOT NULL,
 
+    INDEX `UserPlayer_playerId_fkey`(`playerId`),
     PRIMARY KEY (`userId`, `playerId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -75,6 +77,7 @@ CREATE TABLE `TeamPlayer` (
     `isCaptain` BOOLEAN NOT NULL,
     `isBanking` BOOLEAN NOT NULL,
 
+    INDEX `TeamPlayer_playerId_fkey`(`playerId`),
     PRIMARY KEY (`teamId`, `playerId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -101,6 +104,7 @@ CREATE TABLE `TeamSeason` (
     `goalsConceded` INTEGER NOT NULL,
     `points` INTEGER NOT NULL,
 
+    INDEX `TeamSeason_seasonId_fkey`(`seasonId`),
     PRIMARY KEY (`teamId`, `seasonId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -121,6 +125,7 @@ CREATE TABLE `PlayerSeason` (
     `goalsConceded` INTEGER NOT NULL,
     `timesBought` INTEGER NOT NULL,
 
+    INDEX `PlayerSeason_seasonId_fkey`(`seasonId`),
     PRIMARY KEY (`playerId`, `seasonId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -128,22 +133,22 @@ CREATE TABLE `PlayerSeason` (
 ALTER TABLE `User` ADD CONSTRAINT `User_teamId_fkey` FOREIGN KEY (`teamId`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `UserPlayer` ADD CONSTRAINT `UserPlayer_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `UserPlayer` ADD CONSTRAINT `UserPlayer_playerId_fkey` FOREIGN KEY (`playerId`) REFERENCES `Player`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `TeamPlayer` ADD CONSTRAINT `TeamPlayer_teamId_fkey` FOREIGN KEY (`teamId`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `UserPlayer` ADD CONSTRAINT `UserPlayer_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `TeamPlayer` ADD CONSTRAINT `TeamPlayer_playerId_fkey` FOREIGN KEY (`playerId`) REFERENCES `Player`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `TeamSeason` ADD CONSTRAINT `TeamSeason_teamId_fkey` FOREIGN KEY (`teamId`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `TeamPlayer` ADD CONSTRAINT `TeamPlayer_teamId_fkey` FOREIGN KEY (`teamId`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `TeamSeason` ADD CONSTRAINT `TeamSeason_seasonId_fkey` FOREIGN KEY (`seasonId`) REFERENCES `Season`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `TeamSeason` ADD CONSTRAINT `TeamSeason_teamId_fkey` FOREIGN KEY (`teamId`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `PlayerSeason` ADD CONSTRAINT `PlayerSeason_playerId_fkey` FOREIGN KEY (`playerId`) REFERENCES `Player`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

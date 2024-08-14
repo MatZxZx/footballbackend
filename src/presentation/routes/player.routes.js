@@ -5,7 +5,6 @@ const ValidatorToken = require('../../domain/middlewares/validator.token')
 
 const router = Router()
 
-router.use(ValidatorToken.validateToken)
 router.use(ValidatorWeek.validateWeek)
 router.use(ValidatorWeek.validateOpen)
 
@@ -19,8 +18,8 @@ router.get('/lastweek/:id', PlayerController.getLastweekById)
 
 router.post('/', PlayerController.post)
 
-router.post('/valoration/:id', PlayerController.postValoration)
+router.post('/valoration/:id', ValidatorToken.validateToken, PlayerController.postValoration)
 
-router.put('/statistics/:id', PlayerController.putStatistics)
+router.put('/statistics/:id', ValidatorToken.validateToken, PlayerController.putStatistics)
 
 module.exports = router

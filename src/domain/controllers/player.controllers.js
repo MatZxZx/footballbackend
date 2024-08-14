@@ -31,18 +31,20 @@ class PlayerController {
   static async getAll(req, res) {
     const players = await PlayerModel.findMany()
     const playersResponse = players.map(p => new playerInterface(p))
-    return res.json(playersResponse)
+    if (!playersResponse.length)
+      return res.status(400).json({message: 'No hay jugadores', data: playersResponse})
+    return res.json({message: 'OK', data: playersResponse})
   }
 
   static async getLastweekAll(req, res) {
     const seasons = await WeekModel.findManySeasons()
     if (!seasons.length)
-      return res.json({ message: 'No hay semanas jugadas aun' })
+      return res.status(400).json({ message: 'No hay semanas jugadas aun', data: {} })
     const lastWeek = seasons[seasons.length - 1]
     const players = lastWeek.players.map(p => playerSeasonToPlayer(p))
     const playersResponse = players.map(p => new playerInterface(p))
     console.log(playersResponse)
-    return res.json(playersResponse)
+    return res.json({ message: 'OK', data: playersResponse })
   }
 
   static async getById(req, res) {

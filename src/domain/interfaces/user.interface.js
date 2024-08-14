@@ -7,7 +7,7 @@ class UserInterface {
     this.username = user.username
     this.budget = user.budget
     this.transfers = user.transfers
-    this.willCard = user.willCard
+    this.willCards = user.willCards
     this.willCardActive = user.willCardActive
     this.team = new TeamInterface(user.team)
   }

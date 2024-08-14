@@ -90,10 +90,6 @@ class UserModel {
         email,
         username,
         password: encrypt,
-        budget: 100,
-        transfers: 2,
-        willCard: 1,
-        willCardActive: false,
         team: {
           create: {
             teamname
@@ -113,6 +109,14 @@ class UserModel {
         budget,
         transfers,
         unlimitedTransfers
+      }
+    })
+  }
+
+  static async disableManyUnlimitedTransfers() {
+    await prisma.user.updateMany({
+      data: {
+        unlimitedTransfers: false
       }
     })
   }

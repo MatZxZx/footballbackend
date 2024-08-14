@@ -12,6 +12,7 @@ const weekRoutes = require('./routes/week.routes')
 const app = express()
 
 const PORT = process.env.PORT ?? 3000
+const CLIENT = process.env.CLIENT
 
 app.set('PORT', PORT)
 
@@ -20,7 +21,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: CLIENT,
   credentials: true
 }))
 

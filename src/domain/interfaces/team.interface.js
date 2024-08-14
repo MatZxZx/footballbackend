@@ -4,8 +4,7 @@ class TeamInterface {
   constructor(team) {
     this.id = team.id
     this.teamname = team.teamname
-    this.captainId = team.captainId
-    this.players = team.players.map(p => new playerInterface(p))
+    this.players = team.players.map(p => ({ ...new playerInterface(p), isBanking: p.isBanking, order: p.order, isCaptain: p.isCaptain }))
   }
 }
 

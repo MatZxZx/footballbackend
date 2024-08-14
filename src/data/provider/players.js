@@ -1,65 +1,74 @@
 const players = [
   {
-    name: 'Tiziano',
-    lastname: 'Ferro',
-    photo: 'img/tiziano-ferro.png'
+    name: 'tiziano',
+    lastname: 'ferro',
+    position: 'MC'
   },
   {
-    name: 'Tomas',
-    lastname: 'Dular',
-    photo: 'img/tomas-dular.png'
+    name: 'tomas',
+    lastname: 'dular',
+    position: 'DF'
   },
   {
-    name: 'Agustin',
-    lastname: 'Jerez',
-    photo: 'img/agustin-jerez.png'
+    name: 'agustin',
+    lastname: 'jerez',
+    position: 'DF'
   },
   {
-    name: 'Sebastian',
-    lastname: 'Moschen',
-    photo: 'img/sebastian-moschen.png'
+    name: 'sebastian',
+    lastname: 'moschen',
+    position: 'DF'
   },
   {
-    name: 'Lautaro',
-    lastname: 'Chaparro',
-    photo: 'img/lautaro-chaparro.png'
+    name: 'lautaro',
+    lastname: 'chaparro',
+    position: 'DEL'
   },
   {
-    name: 'Nicolas',
-    lastname: 'Rodriguez',
-    photo: 'img/nicolas-rodriguez.png'
+    name: 'nicolas',
+    lastname: 'rodriguez',
+    position: 'MC'
   },
   {
-    name: 'Pietro',
-    lastname: 'Elviretti',
-    photo: 'img/pietro-elviretti.png'
+    name: 'pietro',
+    lastname: 'elviretti',
+    position: 'PT'
   },
   {
-    name: 'Matias',
-    lastname: 'Quinteros',
-    photo: 'img/matias-quinteros.png'
+    name: 'matias',
+    lastname: 'quinteros',
+    position: 'PT'
   },
   {
-    name: 'Facundo',
-    lastname: 'Dimitrioff',
-    photo: 'img/facundo-dimitrioff.png'
+    name: 'facundo',
+    lastname: 'dimitrioff',
+    position: 'PT'
   },
   {
-    name: 'Javier',
-    lastname: 'Jimenez',
-    photo: 'img/javier-jimenez.png'
+    name: 'javier',
+    lastname: 'jimenez',
+    position: 'DEL'
   },
   {
-    name: 'Bautista',
-    lastname: 'Gonzales',
-    photo: 'img/bautista-gonzales.png'
+    name: 'bautista',
+    lastname: 'gonzales',
+    position: 'DEL'
+  },
+  {
+    name: 'fabricio',
+    lastname: 'galvez',
+    position: 'MC'
+  },
+  {
+    name: 'romeo',
+    lastname: 'dibello',
+    position: 'DF'
+  },
+  {
+    name: 'nicolas',
+    lastname: 'fachinetti',
+    position: 'DF'
   }
-]
+].map(p => ({ ...p, photo: `img/${p.name}-${p.lastname}.png` }))
 
-const playersAll = []
-
-for (const p of players) {
-  playersAll.push(...['PT', 'DF', 'MC', 'DEL'].map(position => ({ ...p, position })))
-}
-
-module.exports = playersAll
+module.exports = players

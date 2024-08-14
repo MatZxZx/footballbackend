@@ -1,134 +1,137 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+    provider          = "mysql"
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Week {
-  id Int @id @default(autoincrement())
-  state String
+    id    Int    @id @default(autoincrement())
+    state String
+    end   String @default("lunes 12:00")
+    start String @default("miercoles 12:00")
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  username String
-  password String
-  team Team @relation(fields: [teamId], references: [id])
-  teamId Int @unique
-  budget Int? @default(100)
-  transfers Int? @default(2)
-  willCard Int? @default(1)
-  willCardActive Boolean? @default(false)
-  unlimitedTransfers Boolean? @default(true)
-  valorationsToPlayers UserPlayer[]
+    id                   Int          @id @default(autoincrement())
+    username             String
+    email                String       @unique
+    password             String
+    teamId               Int          @unique
+    budget               Int?         @default(100)
+    transfers            Int?         @default(2)
+    willCardActive       Boolean?     @default(true)
+    willCards            Int?         @default(2)
+    team                 Team         @relation(fields: [teamId], references: [id])
+    valorationsToPlayers UserPlayer[]
 }
 
 model Player {
-  id Int @id @default(autoincrement())
-  name String
-  lastname String
-  photo String?
-  position String
-  price Int? @default(5)
-  goals Int? @default(0)
-  assists Int? @default(0)
-  locks Int? @default(0)
-  present Boolean? @default(false)
-  goalAgainst Int? @default(0)
-  missedPenalty Int? @default(0)
-  interception Int? @default(0)
-  savedPenalty Int? @default(0)
-  criminalCommitted Int? @default(0)
-  emptyGoal Boolean? @default(false)
-  goalsConceded Int? @default(0)
-  timesBought Int? @default(0)
-  teams TeamPlayer[]
-  seasons PlayerSeason[]
-  valorations UserPlayer[]
+    id                Int            @id @default(autoincrement())
+    name              String
+    lastname          String
+    photo             String?
+    position          String
+    price             Int?           @default(5)
+    goals             Int?           @default(0)
+    assists           Int?           @default(0)
+    locks             Int?           @default(0)
+    present           Boolean?       @default(false)
+    goalAgainst       Int?           @default(0)
+    missedPenalty     Int?           @default(0)
+    interception      Int?           @default(0)
+    savedPenalty      Int?           @default(0)
+    criminalCommitted Int?           @default(0)
+    emptyGoal         Boolean?       @default(false)
+    goalsConceded     Int?           @default(0)
+    timesBought       Int?           @default(0)
+    seasons           PlayerSeason[]
+    teams             TeamPlayer[]
+    valorations       UserPlayer[]
 }
 
 model UserPlayer {
-  user User? @relation(fields: [userId], references: [id])
-  userId Int
-  player Player? @relation(fields: [playerId], references: [id])
-  playerId Int
-  valoration Int
-  @@id([userId, playerId])
+    userId     Int
+    playerId   Int
+    valoration Int
+    player     Player @relation(fields: [playerId], references: [id])
+    user       User   @relation(fields: [userId], references: [id])
+
+    @@id([userId, playerId])
+    @@index([playerId], map: "UserPlayer_playerId_fkey")
 }
 
 model Team {
-  id Int @id @default(autoincrement())
-  teamname String
-  logo String?
-  user User?
-  badPoints Int? @default(0)
-  players TeamPlayer[]
-  seasons TeamSeason[]
+    id        Int          @id @default(autoincrement())
+    teamname  String
+    logo      String?
+    badPoints Int?         @default(0)
+    players   TeamPlayer[]
+    seasons   TeamSeason[]
+    user      User?
 }
 
 model TeamPlayer {
-  team Team? @relation(fields: [teamId], references: [id])
-  teamId Int
-  player Player? @relation(fields: [playerId], references: [id])
-  playerId Int
-  order Int // 0, 1, 3
-  isCaptain Boolean
-  isBanking Boolean
-  @@id([teamId, playerId])
+    teamId    Int
+    playerId  Int
+    order     Int
+    isCaptain Boolean
+    isBanking Boolean
+    player    Player  @relation(fields: [playerId], references: [id])
+    team      Team    @relation(fields: [teamId], references: [id])
+
+    @@id([teamId, playerId])
+    @@index([playerId], map: "TeamPlayer_playerId_fkey")
 }
 
 model Season {
-  id Int @id @default(autoincrement())
-  date String
-  teams TeamSeason[]
-  players PlayerSeason[]
+    id      Int            @id @default(autoincrement())
+    date    String
+    players PlayerSeason[]
+    teams   TeamSeason[]
 }
 
 model TeamSeason {
-  team Team? @relation(fields: [teamId], references: [id])
-  teamId Int
-  season Season? @relation(fields: [seasonId], references: [id])
-  seasonId Int
-  goals Int
-  assists Int
-  locks Int
-  goalAgainst Int
-  missedPenalty Int
-  interception Int
-  savedPenalty Int
-  criminalCommitted Int
-  goalsConceded Int
-  points Int
-  @@id([teamId, seasonId])
+    teamId            Int
+    seasonId          Int
+    goals             Int
+    assists           Int
+    locks             Int
+    goalAgainst       Int
+    missedPenalty     Int
+    interception      Int
+    savedPenalty      Int
+    criminalCommitted Int
+    goalsConceded     Int
+    points            Int
+    season            Season @relation(fields: [seasonId], references: [id])
+    team              Team   @relation(fields: [teamId], references: [id])
+
+    @@id([teamId, seasonId])
+    @@index([seasonId], map: "TeamSeason_seasonId_fkey")
 }
 
 model PlayerSeason {
-  player Player? @relation(fields: [playerId], references: [id])
-  playerId Int
-  season Season? @relation(fields: [seasonId], references: [id])
-  seasonId Int
-  goals Int
-  assists Int
-  locks Int
-  present Boolean
-  goalAgainst Int
-  missedPenalty Int
-  interception Int
-  savedPenalty Int
-  criminalCommitted Int
-  emptyGoal Boolean
-  goalsConceded Int
-  timesBought Int
-  @@id([playerId, seasonId])
+    playerId          Int
+    seasonId          Int
+    goals             Int
+    assists           Int
+    locks             Int
+    present           Boolean
+    goalAgainst       Int
+    missedPenalty     Int
+    interception      Int
+    savedPenalty      Int
+    criminalCommitted Int
+    emptyGoal         Boolean
+    goalsConceded     Int
+    timesBought       Int
+    player            Player  @relation(fields: [playerId], references: [id])
+    season            Season  @relation(fields: [seasonId], references: [id])
+
+    @@id([playerId, seasonId])
+    @@index([seasonId], map: "PlayerSeason_seasonId_fkey")
 }

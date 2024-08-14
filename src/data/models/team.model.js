@@ -1,11 +1,5 @@
 const prisma = require('../prisma')
 
-const configInclude = {
-  players: {
-    player: true
-  }
-}
-
 class TeamModel {
 
   static async findMany() {
@@ -16,6 +10,17 @@ class TeamModel {
             player: true
           }
         }
+      }
+    })
+  }
+
+  static async update({ id, badPoints }) {
+    await prisma.team.updateMany({
+      where: {
+        id
+      },
+      data: {
+        badPoints
       }
     })
   }

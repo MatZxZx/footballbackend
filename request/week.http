@@ -1,3 +1,5 @@
+GET http://localhost:3000/week HTTP/1.1
+
 POST http://localhost:3000/week HTTP/1.1
 
 PUT http://localhost:3000/week/open HTTP/1.1
