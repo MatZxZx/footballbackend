@@ -92,7 +92,8 @@ class UserModel {
         password: encrypt,
         team: {
           create: {
-            teamname
+            teamname,
+            
           }
         }
       },
