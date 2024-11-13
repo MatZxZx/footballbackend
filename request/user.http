@@ -1,12 +1,12 @@
-GET http://localhost:3000/user HTTP/1.1
+GET footballbackend-production.up.railway.app/user HTTP/1.1
 
-GET http://localhost:3000/user/1 HTTP/1.1
+GET footballbackend-production.up.railway.app/user/1 HTTP/1.1
 
-GET http://localhost:3000/user/weeks/1 HTTP/1.1
+GET footballbackend-production.up.railway.app/user/weeks/1 HTTP/1.1
 
 ###
 
-POST http://localhost:3000/user/transfer/1 HTTP/1.1
+POST footballbackend-production.up.railway.app/user/transfer/1 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -72,7 +72,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:3000/user/change/1 HTTP/1.1
+PUT footballbackend-production.up.railway.app/user/change/1 HTTP/1.1
 Content-Type: application/json
 
 {

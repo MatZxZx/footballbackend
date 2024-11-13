@@ -1,12 +1,12 @@
-GET http://localhost:3000/player HTTP/1.1
+GET footballbackend-production.up.railway.app/player HTTP/1.1
 
-GET http://localhost:3000/player/1 HTTP/1.1
+GET footballbackend-production.up.railway.app/player/1 HTTP/1.1
 
-GET http://localhost:3000/player/lastweek HTTP/1.1
+GET footballbackend-production.up.railway.app/player/lastweek HTTP/1.1
 
-GET http://localhost:3000/player/lastweek/1 HTTP/1.1
+GET footballbackend-production.up.railway.app/player/lastweek/1 HTTP/1.1
 
-POST http://localhost:3000/player HTTP/1.1
+POST footballbackend-production.up.railway.app/player HTTP/1.1
 content-type: application/json
 
 {
@@ -15,7 +15,7 @@ content-type: application/json
     "photo": null
 }
 
-POST http://localhost:3000/player/valoration/1 HTTP/1.1
+POST footballbackend-production.up.railway.app/player/valoration/1 HTTP/1.1
 content-type: application/json
 
 {
@@ -23,7 +23,7 @@ content-type: application/json
     "valoration": 5
 }
 
-PUT http://localhost:3000/player/statistics/8 HTTP/1.1
+PUT footballbackend-production.up.railway.app/player/statistics/8 HTTP/1.1
 content-type: application/json
 
 {
