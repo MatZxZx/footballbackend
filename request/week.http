@@ -1,7 +1,7 @@
-GET footballbackend-production.up.railway.app HTTP/1.1
+GET footballbackend-production.up.railway.app/week HTTP/1.1
 
-POST footballbackend-production.up.railway.app HTTP/1.1
+POST footballbackend-production.up.railway.app/week HTTP/1.1
 
-PUT footballbackend-production.up.railway.app HTTP/1.1
+PUT footballbackend-production.up.railway.app/week/open HTTP/1.1
 
-PUT footballbackend-production.up.railway.app HTTP/1.1
+PUT footballbackend-production.up.railway.app/week/close HTTP/1.1
