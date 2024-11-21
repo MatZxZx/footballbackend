@@ -117,7 +117,7 @@ class PlayerController {
     const player = await PlayerModel.findById(playerId)
     if (!player)
       return res.status(400).json({ message: `El jugador con id: ${playerId} no existe` })
-    await PlayerModel.updateStatistics({
+    const p = await PlayerModel.updateStatistics({
       id: playerId,
       goals,
       assists,
@@ -131,7 +131,7 @@ class PlayerController {
       emptyGoal,
       goalsConceded
     })
-    return res.sendStatus(200)
+    return res.json(p)
   }
 }
 
