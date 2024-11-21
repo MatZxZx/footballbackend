@@ -35,7 +35,7 @@ class PlayerModel {
   }
 
   static async updateStatistics({ id, goals, assists, locks, present, goalAgainst, missedPenalty, interception, savedPenalty, criminalCommitted, emptyGoal, goalsConceded }) {
-    await prisma.player.update({
+    return await prisma.player.update({
       where: {
         id
       },
